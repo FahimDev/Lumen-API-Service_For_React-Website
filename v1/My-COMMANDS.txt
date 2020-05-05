@@ -1,1 +1,15 @@
 start : php -S localhost:8000 -t public
+
+php artisan make:controller name
+
+php artisan make:migration create_table-name_table
+
+php artisan migrate
+
+php artisan migrate:reset
+
+php artisan migrate:refresh
+
+
+**using**
+Lumen-Generator
