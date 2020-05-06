@@ -14,3 +14,10 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+$router->get('/services','webManager@selectServices');
+$router->get('/research','webManager@selectResearch');
+$router->get('/contact','webManager@selectContact');
+$router->get('/about','webManager@selectAbout');
+$router->get('/title','webManager@selectWebTitles'); //http://localhost:8000/title
+$router->post('/title','webManager@selectWebTitle'); //http://localhost:8000/title?page=Glitch Studios
