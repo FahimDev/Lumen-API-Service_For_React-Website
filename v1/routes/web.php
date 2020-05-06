@@ -16,6 +16,8 @@ $router->get('/', function () use ($router) {
 });
 
 $router->get('/services',['middleware'=>'auth','uses'=>'webManager@selectServices']);
+
+//$router->get('/services',['middleware'=>'auth','uses'=>'webManager@selectServices']);
 $router->get('/research',['middleware'=>'auth','uses'=>'webManager@selectResearch']);
 $router->get('/contact',['middleware'=>'auth','uses'=>'webManager@selectContact']);
 $router->get('/about',['middleware'=>'auth','uses'=>'webManager@selectAbout']);
