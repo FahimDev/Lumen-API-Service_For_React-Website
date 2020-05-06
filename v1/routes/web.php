@@ -15,9 +15,9 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->get('/services','webManager@selectServices');
-$router->get('/research','webManager@selectResearch');
-$router->get('/contact','webManager@selectContact');
-$router->get('/about','webManager@selectAbout');
-$router->get('/title','webManager@selectWebTitles'); //http://localhost:8000/title
-$router->post('/title','webManager@selectWebTitle'); //http://localhost:8000/title?page=Glitch Studios
+$router->get('/services',['middleware'=>'auth','uses'=>'webManager@selectServices']);
+$router->get('/research',['middleware'=>'auth','uses'=>'webManager@selectResearch']);
+$router->get('/contact',['middleware'=>'auth','uses'=>'webManager@selectContact']);
+$router->get('/about',['middleware'=>'auth','uses'=>'webManager@selectAbout']);
+$router->get('/title',['middleware'=>'auth','uses'=>'webManager@selectWebTitles']); //http://localhost:8000/title
+$router->post('/title',['middleware'=>'auth','uses'=>'webManager@selectWebTitle']); //http://localhost:8000/title?page=Glitch Studios
