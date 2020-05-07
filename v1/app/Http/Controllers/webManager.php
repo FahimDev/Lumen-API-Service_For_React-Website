@@ -38,8 +38,8 @@ class webManager extends Controller
     }
 
     function selectWebTitle(Request $request){
-        $id = $request->input('page');
-        $result  = webTitle::where('title',$id)->get();
+        $page_id = $request->input('id');
+        $result  = webTitle::where('id',$page_id)->get();
         return $result;
     }
 
