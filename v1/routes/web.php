@@ -21,4 +21,15 @@ $router->get('/research',['middleware'=>'auth','uses'=>'webManager@selectResearc
 $router->get('/contact',['middleware'=>'auth','uses'=>'webManager@selectContact']);
 $router->get('/about',['middleware'=>'auth','uses'=>'webManager@selectAbout']);
 $router->get('/title',['middleware'=>'auth','uses'=>'webManager@selectWebTitles']); //http://localhost:8000/title
-$router->post('/title',['middleware'=>'auth','uses'=>'webManager@selectWebTitle']); //http://localhost:8000/title?page=Glitch Studios
+$router->post('/title',['middleware'=>'auth','uses'=>'webManager@selectWebTitle']); //http://localhost:8000/title?id=1
+
+$router->get('/members',['middleware'=>'auth','uses'=>'webManager@selectMembers']);
+$router->get('/member-profile/{memberID}',['middleware'=>'auth','uses'=>'webManager@selectMemberInfo']); //http://localhost:8000/profile/fahim0373
+$router->get('/member-academic/{memberID}',['middleware'=>'auth','uses'=>'webManager@selectMemberEducation']);
+$router->get('/member-work/{memberID}',['middleware'=>'auth','uses'=>'webManager@selectMemberWorkHistory']);
+$router->get('/member-url/{memberID}',['middleware'=>'auth','uses'=>'webManager@selectMemberURL']);
+$router->get('/member-hashTag/{memberID}',['middleware'=>'auth','uses'=>'webManager@selectMemberHashTag']);
+$router->get('/member-hobby/{memberID}',['middleware'=>'auth','uses'=>'webManager@selectMemberHobby']);
+$router->get('/member-experties/{memberID}/{type}',['middleware'=>'auth','uses'=>'webManager@selectMemberExp']);
+$router->get('/member-earn/{memberID}/{type}',['middleware'=>'auth','uses'=>'webManager@selectMemberEarn']);
+$router->get('/member-network/{memberID}',['middleware'=>'auth','uses'=>'webManager@selectMemberNetwork']);

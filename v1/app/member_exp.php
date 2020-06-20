@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class member_info extends Model
+class member_exp extends Model
 {
-    protected $table = 'member-portal';
+    protected $table = 'member-qualification';
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $keyType = 'int';
