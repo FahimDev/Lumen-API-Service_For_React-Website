@@ -18,6 +18,7 @@ class CreateAdminTable extends Migration
             $table->String('user_name')->unique();
             $table->String('password');
             $table->String('type');
+            $table->String('token_element');
             $table->String('status');
             $table->timestamps();
         });

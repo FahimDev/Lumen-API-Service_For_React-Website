@@ -6,6 +6,8 @@ use App\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
+use \Firebase\JWT\JWT; //Custom add for decoding Token
+
 class AuthServiceProvider extends ServiceProvider
 {
     /**
@@ -31,8 +33,17 @@ class AuthServiceProvider extends ServiceProvider
         // the User instance via an API token or any other method necessary.
 
         $this->app['auth']->viaRequest('api', function ($request) {
-            if ($request->input('api_token')) {
-                return User::where('api_token', $request->input('api_token'))->first();
+            //if ($request->input('api_token')) {
+            //      return User::where('api_token', $request->input('api_token'))->first();
+            //}
+            $requestedToken = $request->header('access_token');
+            $key = env ('Token_KEY');
+
+            try{
+                $decoded = JWT::decode($requestedToken, $key, array('HS256'));
+                return new User();
+            }catch(\Exception $e){
+                return null;
             }
         });
     }

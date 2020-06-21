@@ -15,4 +15,11 @@ php artisan migrate:refresh
 Lumen-Generator
 
 
+https://github.com/firebase/php-jwt
+AllahIsTheBestBest&ProtectorWith99Names
+d6cb8f23eb7c136316803c086ab4a052
+d6cb8f23eb7c136316803c086ab4a052
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJBbGxhaElzVGhlQmVzdEJlc3QmUHJvdGVjdG9yV2l0aDk5TmFtZXMiLCJuYW1lIjoiQWxsYWgiLCJpYXQiOjc4Nn0.BCLas0Cwu_rdY9KdcSgofm3aCS4exjB-u9WC_n03YS8
+
 
