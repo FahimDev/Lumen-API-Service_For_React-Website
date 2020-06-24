@@ -6,6 +6,8 @@ use App\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
+use Illuminate\Http\Request;
+use App\Http\Controllers\serviceController;//Custom add for getting the private key
 use \Firebase\JWT\JWT; //Custom add for decoding Token
 
 class AuthServiceProvider extends ServiceProvider
@@ -25,6 +27,7 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @return void
      */
+
     public function boot()
     {
         // Here you may define how you wish users to be authenticated for your Lumen
@@ -37,11 +40,18 @@ class AuthServiceProvider extends ServiceProvider
             //      return User::where('api_token', $request->input('api_token'))->first();
             //}
             $requestedToken = $request->header('access_token');
-            $key = env ('Token_KEY');
+            $userName = $request->header('user_name');
+            
+            $privateKey =serviceController::getMemberPrivateKey($userName); //getting private key from the controller
+            $publicKey = env ('Token_KEY');
+
+            $key =  $privateKey.$publicKey;
 
             try{
+                
                 $decoded = JWT::decode($requestedToken, $key, array('HS256'));
                 return new User();
+                
             }catch(\Exception $e){
                 return null;
             }
