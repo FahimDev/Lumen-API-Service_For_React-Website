@@ -15,6 +15,10 @@ php artisan migrate:refresh
 Lumen-Generator
 
 
+DB name:glitchin_office
+DB Pass:q.@%mfM$P@~_
+
+
 https://github.com/firebase/php-jwt
 AllahIsTheBestBest&ProtectorWith99Names
 d6cb8f23eb7c136316803c086ab4a052

@@ -39,8 +39,8 @@ class AuthServiceProvider extends ServiceProvider
             //if ($request->input('api_token')) {
             //      return User::where('api_token', $request->input('api_token'))->first();
             //}
-            $requestedToken = $request->header('access_token');
-            $userName = $request->header('user_name');
+            $requestedToken = $request->header('access-token');
+            $userName = $request->header('userName');
             
             $privateKey =serviceController::getMemberPrivateKey($userName); //getting private key from the controller
             $publicKey = env ('Token_KEY');
