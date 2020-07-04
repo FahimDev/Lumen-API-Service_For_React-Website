@@ -18,7 +18,7 @@ $router->get('/', function () use ($router) {
 //$router->get('/test','serviceController@MemberPrivateKey');
 
 
-$router->post('/authority','serviceController@Signin'); //http://localhost:8000/authority?userName=user01213&password=1234
+$router->post('/authority',['middleware'=>'auth','uses'=>'serviceController@Signin']); //http://localhost:8000/authority?userName=user01213&password=1234
 $router->post('/update-password',['middleware'=>'auth','uses'=>'serviceController@updatePassword']);
 
 

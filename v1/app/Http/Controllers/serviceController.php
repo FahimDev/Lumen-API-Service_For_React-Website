@@ -68,59 +68,83 @@ class serviceController extends Controller
             return "Shoitan!";
         }
     }
+    function authAccessToken($getToken,$getUserName){
+        $token = $getToken;
+        $user = $getUserName;
 
-    public static function getMemberPrivateKey($userName){
+        $privateKey = $this->getMemberPrivateKey($user);
+
+        $publicKey = env ('TOKEN_KEY');
+
+        $key = $privateKey.$publicKey;
+
+        try{
+
+            $decoded = JWT::decode($token, $key, array('HS256'));
+            return "Halal";
+
+        }catch(\Exception $e){
+            return "Haram";
+        }
+
+    }
+    function getMemberPrivateKey($userName){
        // $member_id = $request->input('user_name');
         $member_id = $userName;
         $result  = admin::where('user_name',$member_id)->first('token_element');
         $token = $result->token_element;
-        //I am using 'pluck' because I just want the value.'get' returns the Key and Value both.  
         return $token;
     }
 
+    public static function getMemberHashPass($userName)
+    {      
+         $member_id = $userName;
+         $result  = admin::where('user_name',$member_id)->first('password');
+         $hashedPassword = $result->password;
+         return $hashedPassword;
+     }
 
-    /**               Just for testing
-     * public static function MemberPrivateKey(Request $request){
-     *$member_id = $request->input('user_name');
-     *$result  = admin::where('user_name',$member_id)->pluck('token_element');
-     *return $result;
-     *}
-     */
 
 
     function updatePassword(Request $request){
-        $requestedToken =  $request->header('access-token') ;
+        $requestedToken =  $request->header('Access-Token') ;
 
         $userName = $request->input('userName') ;
+
+        $authTokenStatus = $this->authAccessToken($requestedToken,$userName);
+
         $oldPassword = $request->input('oldPassword') ;
         $newPassword = $request->input('newPassword') ;
 
-        $hashed = Hash::make($newPassword, [
-            'memory' => 1024,
-            'time' => 2,
-            'threads' => 2,
-        ]);
-
-
-        $result  = admin::where('user_name',$userName)->first('password');
-        $hashedPassword = $result->password;
-
-        if (Hash::check($oldPassword, $hashedPassword)) {
-            $updateStatus=admin::where('user_name',$userName)->update(['password' =>$hashed]);
-
-            if($updateStatus==true){
-                return response()->json(['updated_password'=>$newPassword]) ;
+        if($authTokenStatus == "Halal"){
+            $hashed = Hash::make($newPassword, [
+                'memory' => 1024,
+                'time' => 2,
+                'threads' => 2,
+            ]);
+    
+    
+            $result  = admin::where('user_name',$userName)->first('password');
+            $hashedPassword = $result->password;
+    
+            if (Hash::check($oldPassword, $hashedPassword)) {
+                $updateStatus=admin::where('user_name',$userName)->update(['password' =>$hashed]);
+    
+                if($updateStatus==true){
+                    return response()->json(['updated_password'=>$newPassword]) ;
+                }
+                else{
+                    return "Update fail";
+                }
             }
             else{
-              return "Update fail";
+                return "Wrong Password !";
             }
         }
         else{
-            return "Wrong Password !";
+            return "Invalid Token !";
         }
-
-
-       
+     
        
     }
 

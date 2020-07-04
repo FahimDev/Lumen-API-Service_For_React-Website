@@ -8,7 +8,7 @@ use Illuminate\Support\ServiceProvider;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\serviceController;//Custom add for getting the private key
-use \Firebase\JWT\JWT; //Custom add for decoding Token
+use Illuminate\Support\Facades\Hash;//Custom add for authenticating password 
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -39,20 +39,17 @@ class AuthServiceProvider extends ServiceProvider
             //if ($request->input('api_token')) {
             //      return User::where('api_token', $request->input('api_token'))->first();
             //}
-            $requestedToken = $request->header('access-token');
-            $userName = $request->header('userName');
+            $password = $request->header('Password');
+            $userName = $request->header('User-Name');
             
-            $privateKey =serviceController::getMemberPrivateKey($userName); //getting private key from the controller
-            $publicKey = env ('Token_KEY');
+            $hashData =serviceController::getMemberHashPass($userName); //getting HASH Password from the controller
+            
 
-            $key =  $privateKey.$publicKey;
-
-            try{
-                
-                $decoded = JWT::decode($requestedToken, $key, array('HS256'));
+            if (Hash::check($password, $hashData)) 
+            {
                 return new User();
                 
-            }catch(\Exception $e){
+            }else{
                 return null;
             }
         });
