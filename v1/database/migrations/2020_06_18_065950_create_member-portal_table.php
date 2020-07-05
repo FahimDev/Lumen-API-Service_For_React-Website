@@ -23,6 +23,8 @@ class CreateMemberPortalTable extends Migration
             $table->String('imgPath');
             $table->String('fatherName');
             $table->String('motherName');
+            $table->String('gender');
+            $table->String('blood');
             $table->String('religion');
             $table->String('relationship');
             $table->String('currentLoc');

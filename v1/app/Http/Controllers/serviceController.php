@@ -6,11 +6,16 @@ use Illuminate\Http\Request;
 
 use App\admin;//model
 
+use App\member_info;//model
+
 use \Firebase\JWT\JWT; //Custom add for enciding Token
 
 use Illuminate\Support\Str; //custom import for random string generator
 
 use Illuminate\Support\Facades\Hash; //custom import for hashing user password
+
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 
 use Crypt;
 use App\User;
@@ -146,6 +151,65 @@ class serviceController extends Controller
         }
      
        
+    }
+
+    function updateProfile(Request $request){
+        $requestedToken =  $request->header('Access-Token') ;
+
+        $userName = $request->input('userName') ;
+
+        $authTokenStatus = $this->authAccessToken($requestedToken,$userName);
+
+        $changeKey = $request->input('type');
+        $changeVal = $request->input('data');
+
+
+        if($authTokenStatus == "Halal"){
+
+            $updateStatus=member_info::where('userName',$userName)->update([$changeKey =>$changeVal]);
+
+            if($updateStatus==true){
+                return response()->json(['updated_info'=>$changeVal]) ;
+            }
+            else{
+                return "Update fail";
+            }
+        }
+        else{
+            return "Invalid Token !";
+        }
+    }
+
+
+    function uploadImg(Request $request){
+        $requestedToken =  $request->header('Access-Token') ;
+
+        $userName = $request->input('userName') ;
+
+        $imgFile = $request->file('uploadImg') ;
+
+        if ($request->hasFile('uploadImg')) {
+            $authTokenStatus = $this->authAccessToken($requestedToken,$userName);
+
+                if($authTokenStatus == "Halal"){
+
+                    $name =$userName.'.'.$imgFile->getClientOriginalExtension();
+                    $destinationPath = $imgFile->move('membersImg',$name);
+
+                    
+                    return $destinationPath;
+
+                }
+                else{
+                    return "Invalid Token !";
+                }
+        }
+        else{
+            return "Image file not found !";
+        }
+
+        
+
     }
 
 }
