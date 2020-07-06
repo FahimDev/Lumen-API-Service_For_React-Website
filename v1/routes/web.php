@@ -22,6 +22,7 @@ $router->post('/authority',['middleware'=>'auth','uses'=>'serviceController@Sign
 $router->post('/update-password',['middleware'=>'auth','uses'=>'serviceController@updatePassword']);
 $router->post('/update-profile',['middleware'=>'auth','uses'=>'serviceController@updateProfile']);
 $router->post('/update-profile-img',['middleware'=>'auth','uses'=>'serviceController@uploadImg']);
+$router->post('/update-profile-edu',['middleware'=>'auth','uses'=>'serviceController@updateMemberEdu']);
 
 
 $router->get('/services',['middleware'=>'auth','uses'=>'webManager@selectServices']);

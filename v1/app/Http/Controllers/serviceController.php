@@ -8,6 +8,8 @@ use App\admin;//model
 
 use App\member_info;//model
 
+use App\member_edu;//model
+
 use \Firebase\JWT\JWT; //Custom add for enciding Token
 
 use Illuminate\Support\Str; //custom import for random string generator
@@ -210,6 +212,129 @@ class serviceController extends Controller
 
         
 
+    }
+
+    function updateMemberEdu(Request $request){
+        $requestedToken =  $request->header('Access-Token') ;
+
+        $userName = $request->input('userName') ;
+
+        $operationType = $request->input('operationType');
+
+        $authTokenStatus = $this->authAccessToken($requestedToken,$userName);
+
+        $nameKey = $request->input('nameKay');
+        $nameVal = $request->input('nameVal');
+
+        $batchKey = $request->input('batchKey');
+        $batchVal = $request->input('batchVal');
+
+
+        if($authTokenStatus == "Halal"){
+
+
+            if($operationType == 'insert')
+            {
+                if($nameKey == 'school' || $nameKey == 'college')
+                {
+                    $updateStatus=member_edu::insert(['userName' =>$userName,$nameKey =>$nameVal,$batchKey =>$batchVal]);
+
+                    if($updateStatus==true){
+                        return "Success";
+                    }
+                    else{
+                        return "Update fail";
+                    }  
+                }
+                else 
+                {
+                    $subjectKey = $request->input('subjectKey');
+                    $subjectVal = $request->input('subjectVal');
+
+                    $updateStatus=member_edu::insert(['userName' =>$userName,$nameKey =>$nameVal,$batchKey =>$batchVal,$subjectKey =>$subjectVal]);
+
+                    if($updateStatus==true){
+                        return "Success";
+                    }
+                    else{
+                        return "Update fail";
+                    }    
+                }
+            }
+            else if($operationType == 'update')
+            {
+
+                //------update:start(WHERE)-------------------
+                $oldNameKey = $request->input('oldNameKey');
+                $oldNameVal = $request->input('oldNameVal');
+
+                $oldBatchKey = $request->input('oldBatchKey');
+                $oldBatchVal = $request->input('oldBatchVal');
+                //------update:end(WHERE)-------------------
+
+
+                if($nameKey == 'school' || $nameKey == 'college')
+                {
+                    $updateStatus=member_edu::where(['userName' =>$userName,$oldNameKey =>$oldNameVal,$oldBatchKey =>$oldBatchVal])->update([$nameKey =>$nameVal,$batchKey =>$batchVal]);
+
+                    if($updateStatus==true){
+                        return "Success";
+                    }
+                    else{
+                        return "Update fail";
+                    }  
+                }
+                else
+                {
+                    $subjectKey = $request->input('subjectKey');
+                    $subjectVal = $request->input('subjectVal');
+
+                    $oldSubjectKey = $request->input('oldSubjectKey');
+                    $oldSubjectVal = $request->input('oldSubjectVal');
+
+                    $updateStatus=member_edu::where(['userName' =>$userName,$oldNameKey =>$oldNameVal,$oldBatchKey =>$oldBatchVal,$oldSubjectKey =>$oldSubjectVal])->update([$nameKey =>$nameVal,$batchKey =>$batchVal,$subjectKey =>$subjectVal]);
+
+                    if($updateStatus==true){
+                        return "Success";
+                    }
+                    else{
+                        return "Update fail";
+                    }    
+                }
+            }
+            else
+            {
+                if($nameKey == 'school' || $nameKey == 'college')
+                {
+                    $deleteStatus=member_edu::where(['userName'=>$userName,$nameKey =>$nameVal,$batchKey =>$batchVal])->delete();
+
+                    if($deleteStatus==true){
+                        return "Delete Success";
+                    }
+                    else{
+                        return "Delete fail";
+                    }  
+                }
+                else
+                {
+                    $subjectKey = $request->input('subjectKey');
+                    $subjectVal = $request->input('subjectVal');
+
+                    $deleteStatus=member_edu::where(['userName'=>$userName,$nameKey =>$nameVal,$batchKey =>$batchVal,$subjectKey =>$subjectVal])->delete();
+
+                    if($deleteStatus==true){
+                        return "Delete Success";
+                    }
+                    else{
+                        return "Delete fail";
+                    }    
+                }
+            }
+     
+        }
+        else{
+            return "Invalid Token !";
+        }
     }
 
 }
