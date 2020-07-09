@@ -219,7 +219,7 @@ class serviceController extends Controller
 
         $userName = $request->input('userName') ;
 
-        $operationType = $request->input('operationType');
+        $operationType = $request->method();
 
         $authTokenStatus = $this->authAccessToken($requestedToken,$userName);
 
@@ -233,7 +233,7 @@ class serviceController extends Controller
         if($authTokenStatus == "Halal"){
 
 
-            if($operationType == 'insert')
+            if($operationType == 'POST')
             {
                 if($nameKey == 'school' || $nameKey == 'college')
                 {
@@ -261,7 +261,7 @@ class serviceController extends Controller
                     }    
                 }
             }
-            else if($operationType == 'update')
+            else if($operationType == 'PUT')
             {
 
                 //------update:start(WHERE)-------------------
@@ -302,7 +302,7 @@ class serviceController extends Controller
                     }    
                 }
             }
-            else
+            else if ($operationType == 'DELETE')
             {
                 if($nameKey == 'school' || $nameKey == 'college')
                 {
@@ -329,6 +329,27 @@ class serviceController extends Controller
                         return "Delete fail";
                     }    
                 }
+            }
+            else{
+                return ' *******Super Global Variable ERROR!******* ';
+                //****************The reason of taking HTTP request methods so serious****************
+                /* 
+                    The POST request is not Idempotent but the DELETE request is Idempotent.
+
+                    An idempotent HTTP method is a HTTP method that can be called many times without different outcomes
+
+                    Idempotency is important in building a fault-tolerant API.
+
+                    Suppose a client wants to update a resource through POST. Since POST is not an idempotent method, 
+                    calling it multiple times can result in wrong updates. What would happen if you sent out the POST 
+                    request to the server, but you get a timeout. Is the resource actually updated? Does the timeout 
+                    happened during sending the request to the server, or the response to the client? Can we safely retry again, 
+                    or do we need to figure out first what has happened with the resource? By using idempotent methods, we do not 
+                    have to answer this question, but we can safely resend the request until we actually get a response back from the server.
+
+                    So, if you use POST for deleting, there will consequences.
+                */
+
             }
      
         }

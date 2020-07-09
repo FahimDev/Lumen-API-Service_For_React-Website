@@ -43,7 +43,7 @@ class Authenticate
          * POST is important because POST request can make change in my main database. 
          */
         $type = $request->method();
-        if($type == 'POST'){
+        if($type != 'GET'){
 
 
             if ($this->auth->guard($guard)->guest()) {
