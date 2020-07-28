@@ -60,7 +60,7 @@ class serviceController extends Controller
 
                 $jwt = JWT::encode($payload, $key);
 
-                return response()->json(['Token'=>$jwt,'response'=>'As-salamu Alaykum'])->header('User', $userName)->header('Login-Session', '1 Hour');
+                return response()->json(['Token'=>$jwt,'response'=>'As-Salamu Alaykum'])->header('User', $userName)->header('Login-Session', '1 Hour');
            
             }
             else{
@@ -111,7 +111,48 @@ class serviceController extends Controller
          return $hashedPassword;
      }
 
+    function addUser(Request $request){
+        $requestedToken =  $request->header('Access-Token') ;
 
+        $userName = $request->header('User-Name') ;
+
+        $authTokenStatus = $this->authAccessToken($requestedToken,$userName);
+
+        $newUser = $request->input('newUser');
+        $newUserPass = $request->input('newUserPass');
+
+        if($authTokenStatus == "Halal"){
+
+            $getUserType=admin::where('user_name',$userName)->first('type');
+
+            if($getUserType->type=='1'){
+
+                $hashedPass = Hash::make($newUserPass, [
+                    'memory' => 1024,
+                    'time' => 2,
+                    'threads' => 2,
+                ]);
+
+                $createUser = admin::insert(['user_name' => $newUser,'password' => $hashedPass,'type' => "2",'status'=>'1']);
+                $createProfile = member_info::insert(['userName' => $newUser]);
+               
+                    if($createUser== true && $createProfile == true){
+                        return "success";
+                    }
+                    else{
+                        return "error";
+                    }
+
+
+            }
+            else{
+                return $getUserType;
+            }
+        }
+        else{
+            return "Invalid Token !";
+        }
+    }
 
     function updatePassword(Request $request){
         $requestedToken =  $request->header('Access-Token') ;
