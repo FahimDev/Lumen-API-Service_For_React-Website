@@ -12,6 +12,10 @@ use App\member_edu;//model
 
 use App\member_work;//model
 
+use App\member_hobby;//model
+
+use App\member_url;//model
+
 use \Firebase\JWT\JWT; //Custom add for enciding Token
 
 use Illuminate\Support\Str; //custom import for random string generator
@@ -468,6 +472,123 @@ class serviceController extends Controller
             return "Invalid Token !";
         }
     }
+
+    
+    function updateHobby(Request $request){
+        $requestedToken =  $request->header('Access-Token') ;
+
+        $userName = $request->header('User-Name') ;
+
+        $authTokenStatus = $this->authAccessToken($requestedToken,$userName);
+
+        $operationType = $request->method();
+
+        $hobby = $request->input('hobby');
+
+        if($authTokenStatus == "Halal"){
+
+            if($operationType == "POST"){
+               $addHobby = member_hobby::insert(['userName'=>$userName,'hobby'=>$hobby]);
+                if($addHobby == true){
+                    return "success";
+                }
+                else{
+                    return "not added!";
+                }
+            }
+            else if($operationType == "PUT"){
+                
+                $updateVal = $request->input('changeVal');
+
+                $updatehobby = member_hobby::where(['userName'=>$userName,'hobby' => $hobby])->update(['hobby' => $updateVal]);
+                if($updatehobby == true){
+                    return "success";
+                }
+                else{
+                    return "not removed!";
+                }
+                
+            }
+            else if($operationType == "DELETE"){
+                $removeHobby = member_hobby::where(['userName'=>$userName,'hobby' => $hobby])->delete();
+                if($removeHobby == true){
+                    return "success";
+                }
+                else{
+                    return "not removed!";
+                }
+            }
+            else{
+                return ' *******Super Global Variable ERROR!******* ';
+            }
+
+        }
+        else{
+            return "Invalid Token !";
+        }
+    }
+
+
+
+
+    function updateURL(Request $request){
+        $requestedToken =  $request->header('Access-Token') ;
+
+        $userName = $request->header('User-Name') ;
+
+        $authTokenStatus = $this->authAccessToken($requestedToken,$userName);
+
+        $operationType = $request->method();
+
+        $title = $request->input('title');
+        $url = $request->input('url');
+
+        if($authTokenStatus == "Halal"){
+
+            if($operationType == "POST"){
+               $addHobby = member_url::insert(['userName'=>$userName,'buttonTitle'=>$title,'url'=>$url]);
+                if($addHobby == true){
+                    return "success";
+                }
+                else{
+                    return "not added!";
+                }
+            }
+            else if($operationType == "PUT"){
+                
+                $updateKey = $request->input('changeKey');
+                $updateVal = $request->input('changeVal');
+
+                $updatehobby = member_url::where(['userName'=>$userName,'buttonTitle'=>$title,'url'=>$url])->update([$updateKey => $updateVal]);
+                if($updatehobby == true){
+                    return "success";
+                }
+                else{
+                    return "not removed!";
+                }
+                
+            }
+            else if($operationType == "DELETE"){
+                $removeHobby = member_url::where(['userName'=>$userName,'buttonTitle'=>$title,'url'=>$url])->delete();
+                if($removeHobby == true){
+                    return "success";
+                }
+                else{
+                    return "not removed!";
+                }
+            }
+            else{
+                return ' *******Super Global Variable ERROR!******* ';
+            }
+
+        }
+        else{
+            return "Invalid Token !";
+        }
+    }
+
+
+
 
 }
 

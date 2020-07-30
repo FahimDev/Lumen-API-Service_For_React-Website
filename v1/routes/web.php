@@ -33,6 +33,17 @@ $router->post('/update-employment',['middleware'=>'auth','uses'=>'serviceControl
 $router->delete('/update-employment',['middleware'=>'auth','uses'=>'serviceController@updateWork']);
 $router->put('/update-employment',['middleware'=>'auth','uses'=>'serviceController@updateWork']);
 
+
+$router->post('/update-hob',['middleware'=>'auth','uses'=>'serviceController@updateHobby']);
+$router->delete('/update-hob',['middleware'=>'auth','uses'=>'serviceController@updateHobby']);
+$router->put('/update-hob',['middleware'=>'auth','uses'=>'serviceController@updateHobby']);
+
+
+$router->post('/update-links',['middleware'=>'auth','uses'=>'serviceController@updateURL']);
+$router->delete('/update-links',['middleware'=>'auth','uses'=>'serviceController@updateURL']);
+$router->put('/update-links',['middleware'=>'auth','uses'=>'serviceController@updateURL']);
+
+
 $router->get('/services',['middleware'=>'auth','uses'=>'webManager@selectServices']);
 $router->get('/research',['middleware'=>'auth','uses'=>'webManager@selectResearch']);
 $router->get('/contact',['middleware'=>'auth','uses'=>'webManager@selectContact']);
