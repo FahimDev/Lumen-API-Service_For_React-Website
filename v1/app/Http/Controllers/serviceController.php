@@ -10,6 +10,8 @@ use App\member_info;//model
 
 use App\member_edu;//model
 
+use App\member_work;//model
+
 use \Firebase\JWT\JWT; //Custom add for enciding Token
 
 use Illuminate\Support\Str; //custom import for random string generator
@@ -17,7 +19,6 @@ use Illuminate\Support\Str; //custom import for random string generator
 use Illuminate\Support\Facades\Hash; //custom import for hashing user password
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-
 
 use Crypt;
 use App\User;
@@ -236,11 +237,22 @@ class serviceController extends Controller
 
                 if($authTokenStatus == "Halal"){
 
-                    $name =$userName.'.'.$imgFile->getClientOriginalExtension();
+                    $name =$userName.time().'.'.$imgFile->getClientOriginalExtension();
                     $destinationPath = $imgFile->move('membersImg',$name);
 
+
+                    $baseURL = env ('APP_URL');
+
+                    $updateProImg = member_info::where('userName',$userName)->update(['imgPath' =>$baseURL.'public/'.$destinationPath]);
+
+                    if($updateProImg == true){
+                        return "success";
+                    }
+                    else{
+                        return "error";
+                    }
                     
-                    return $destinationPath;
+                   // return $destinationPath;
 
                 }
                 else{
@@ -393,6 +405,64 @@ class serviceController extends Controller
 
             }
      
+        }
+        else{
+            return "Invalid Token !";
+        }
+    }
+
+    function updateWork(Request $request){
+        $requestedToken =  $request->header('Access-Token') ;
+
+        $userName = $request->header('User-Name') ;
+
+        $authTokenStatus = $this->authAccessToken($requestedToken,$userName);
+
+        $operationType = $request->method();
+        $type = $request->input('type');
+        $orgName = $request->input('orgName');
+        $rank = $request->input('rank');
+        $start = $request->input('start');
+        $end = $request->input('end');
+
+        if($authTokenStatus == "Halal"){
+
+            if($operationType == "POST"){
+               $addWork = member_work::insert(['userName'=>$userName,'type'=>$type,'orgName'=>$orgName,'rank'=>$rank,'started'=>$start,'end'=>$end]);
+                if($addWork == true){
+                    return "success";
+                }
+                else{
+                    return "not added!";
+                }
+            }
+            else if($operationType == "PUT"){
+                
+                $updateKey = $request->input('changeKey');
+                $updateVal = $request->input('changeVal');
+
+                $updateWork = member_work::where(['userName'=>$userName,'type'=>$type,'orgName'=>$orgName,'rank'=>$rank,'started'=>$start,'end'=>$end])->update([$updateKey => $updateVal]);
+                if($updateWork == true){
+                    return "success";
+                }
+                else{
+                    return "not removed!";
+                }
+                
+            }
+            else if($operationType == "DELETE"){
+                $removeWork = member_work::where(['userName'=>$userName,'type'=>$type,'orgName'=>$orgName,'rank'=>$rank,'started'=>$start,'end'=>$end])->delete();
+                if($removeWork == true){
+                    return "success";
+                }
+                else{
+                    return "not removed!";
+                }
+            }
+            else{
+                return ' *******Super Global Variable ERROR!******* ';
+            }
+
         }
         else{
             return "Invalid Token !";

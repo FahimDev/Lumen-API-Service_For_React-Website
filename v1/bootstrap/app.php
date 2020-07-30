@@ -22,6 +22,7 @@ date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
 $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
+ //$app->configure('opendox');
 
  $app->withFacades();
 
@@ -90,7 +91,7 @@ $app->configure('app');
 | totally optional, so you are not required to uncomment this line.
 |
 */
-
+ //$app->register(Noitran\Opendox\ServiceProvider::class);//Custom add for API Documentation 
 // $app->register(App\Providers\AppServiceProvider::class);
  $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);

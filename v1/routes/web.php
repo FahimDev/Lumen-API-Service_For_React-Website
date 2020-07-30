@@ -29,6 +29,10 @@ $router->put('/update-profile-edu',['middleware'=>'auth','uses'=>'serviceControl
 $router->delete('/update-profile-edu',['middleware'=>'auth','uses'=>'serviceController@updateMemberEdu']);
 
 
+$router->post('/update-employment',['middleware'=>'auth','uses'=>'serviceController@updateWork']);
+$router->delete('/update-employment',['middleware'=>'auth','uses'=>'serviceController@updateWork']);
+$router->put('/update-employment',['middleware'=>'auth','uses'=>'serviceController@updateWork']);
+
 $router->get('/services',['middleware'=>'auth','uses'=>'webManager@selectServices']);
 $router->get('/research',['middleware'=>'auth','uses'=>'webManager@selectResearch']);
 $router->get('/contact',['middleware'=>'auth','uses'=>'webManager@selectContact']);
