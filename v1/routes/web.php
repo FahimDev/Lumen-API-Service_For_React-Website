@@ -44,6 +44,12 @@ $router->delete('/update-links',['middleware'=>'auth','uses'=>'serviceController
 $router->put('/update-links',['middleware'=>'auth','uses'=>'serviceController@updateURL']);
 
 
+$router->post('/update-reference',['middleware'=>'auth','uses'=>'serviceController@updateReference']);
+$router->delete('/update-reference',['middleware'=>'auth','uses'=>'serviceController@updateReference']);
+$router->put('/update-reference',['middleware'=>'auth','uses'=>'serviceController@updateReference']);
+
+$router->put('/show-reference',['middleware'=>'auth','uses'=>'serviceController@stateReference']);
+
 $router->get('/services',['middleware'=>'auth','uses'=>'webManager@selectServices']);
 $router->get('/research',['middleware'=>'auth','uses'=>'webManager@selectResearch']);
 $router->get('/contact',['middleware'=>'auth','uses'=>'webManager@selectContact']);

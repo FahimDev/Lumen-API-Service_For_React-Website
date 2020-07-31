@@ -16,6 +16,8 @@ use App\member_hobby;//model
 
 use App\member_url;//model
 
+use App\member_network;//model
+
 use \Firebase\JWT\JWT; //Custom add for enciding Token
 
 use Illuminate\Support\Str; //custom import for random string generator
@@ -588,6 +590,121 @@ class serviceController extends Controller
     }
 
 
+
+    function stateReference(Request $request){
+        $requestedToken =  $request->header('Access-Token') ;
+
+        $userName = $request->header('User-Name') ;
+
+        $authTokenStatus = $this->authAccessToken($requestedToken,$userName);
+
+        if($authTokenStatus == "Halal"){
+
+            $updateVal = $request->input('status');
+            
+            if($updateVal == '2'){
+                $stateRef = member_network::where(['userName'=>$userName])->update(['status' => '0']);
+                if($stateRef == true){
+                    return "success";
+                }
+                else{
+                    return "not updated!";
+                }
+            }
+            else if ($updateVal == '3'){
+                $stateRef = member_network::where(['userName'=>$userName])->update(['status' => '1']);
+                if($stateRef == true){
+                    return "success";
+                }
+                else{
+                    return "not updated!";
+                }
+            }
+            else{
+
+                    $title = $request->input('title');
+                    $name = $request->input('name');
+                    $position = $request->input('position');
+                    $contact = $request->input('contact');
+                    $eMail = $request->input('eMail');
+                    $url = $request->input('url');
+
+                    $stateRef = member_network::where(['userName'=>$userName,'title'=>$title,'name'=>$name,'position'=>$position,'contact'=>$contact,'eMail'=>$eMail,'url'=>$url])->update(['status' => $updateVal]);
+                    if($stateRef == true){
+                        return "success";
+                }
+                else{
+                    return "not updated!";
+                }
+            }
+           
+
+        }else{
+            return "Invalid Token !";
+        }
+    }
+
+
+
+    function updateReference(Request $request){
+        $requestedToken =  $request->header('Access-Token') ;
+
+        $userName = $request->header('User-Name') ;
+
+        $authTokenStatus = $this->authAccessToken($requestedToken,$userName);
+
+        $operationType = $request->method();
+
+        $title = $request->input('title');
+        $name = $request->input('name');
+        $position = $request->input('position');
+        $contact = $request->input('contact');
+        $eMail = $request->input('eMail');
+        $url = $request->input('url');
+
+        if($authTokenStatus == "Halal"){
+
+            if($operationType == "POST"){
+               $addHobby = member_network::insert(['userName'=>$userName,'title'=>$title,'name'=>$name,'position'=>$position,'contact'=>$contact,'eMail'=>$eMail,'url'=>$url,'status'=>'1']);
+                if($addHobby == true){
+                    return "success";
+                }
+                else{
+                    return "not added!";
+                }
+            }
+            else if($operationType == "PUT"){
+                
+                $updateKey = $request->input('changeKey');
+                $updateVal = $request->input('changeVal');
+
+                $updatehobby = member_network::where(['userName'=>$userName,'title'=>$title,'name'=>$name,'position'=>$position,'contact'=>$contact,'eMail'=>$eMail,'url'=>$url])->update([$updateKey => $updateVal]);
+                if($updatehobby == true){
+                    return "success";
+                }
+                else{
+                    return "not updated!";
+                }
+                
+            }
+            else if($operationType == "DELETE"){
+                $removeHobby = member_network::where(['userName'=>$userName,'title'=>$title,'name'=>$name,'position'=>$position,'contact'=>$contact,'eMail'=>$eMail,'url'=>$url])->delete();
+                if($removeHobby == true){
+                    return "success";
+                }
+                else{
+                    return "not removed!";
+                }
+            }
+            else{
+                return ' *******Super Global Variable ERROR!******* ';
+            }
+
+        }
+        else{
+            return "Invalid Token !";
+        }
+    }
 
 
 }
