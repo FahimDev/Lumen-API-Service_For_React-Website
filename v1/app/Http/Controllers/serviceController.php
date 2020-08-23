@@ -245,7 +245,12 @@ class serviceController extends Controller
 
                     $name =$userName.time().'.'.$imgFile->getClientOriginalExtension();
                     $destinationPath = $imgFile->move('membersImg',$name);
-
+                                                    /**
+                                                     * when you deploy this project to actual server
+                                                     * replace the $destinationPath value with "public/membersImg"
+                                                     * and remove the 'public/' portion from the value of
+                                                     * $updateProImg 
+                                                     */
 
                     $baseURL = env ('APP_URL');
 
@@ -704,6 +709,30 @@ class serviceController extends Controller
         else{
             return "Invalid Token !";
         }
+    }
+
+    function appShowRef(Request $request){
+
+        $requestedToken =  $request->header('Access-Token') ;
+
+        $userName = $request->header('User-Name') ;
+
+        $authTokenStatus = $this->authAccessToken($requestedToken,$userName);
+        if($authTokenStatus == "Halal"){
+            $member_id = $userName;
+            $result  = member_network::where('userName',$member_id)->get();
+            if($result == true){
+                return $result;
+            }
+            else{
+                return "SQL Error!";
+            }
+            return $result;
+        }
+        else{
+            return "Invalid Token !";
+        }
+        
     }
 
 

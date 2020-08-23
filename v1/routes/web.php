@@ -50,6 +50,9 @@ $router->put('/update-reference',['middleware'=>'auth','uses'=>'serviceControlle
 
 $router->put('/show-reference',['middleware'=>'auth','uses'=>'serviceController@stateReference']);
 
+
+$router->get('/app-member-network',['middleware'=>'auth','uses'=>'serviceController@appShowRef']);
+
 $router->get('/services',['middleware'=>'auth','uses'=>'webManager@selectServices']);
 $router->get('/research',['middleware'=>'auth','uses'=>'webManager@selectResearch']);
 $router->get('/contact',['middleware'=>'auth','uses'=>'webManager@selectContact']);
