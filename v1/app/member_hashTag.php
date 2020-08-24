@@ -10,6 +10,6 @@ class member_hashTag extends Model
     protected $primaryKey = 'id';
     public $incrementing = true;
     protected $keyType = 'int';
-    public $timestamps = true;
+    public $timestamps = false;
     protected $dateFormat = 'U';
 }

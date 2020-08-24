@@ -18,6 +18,8 @@ use App\member_url;//model
 
 use App\member_network;//model
 
+use App\member_hashTag;//model
+
 use \Firebase\JWT\JWT; //Custom add for enciding Token
 
 use Illuminate\Support\Str; //custom import for random string generator
@@ -733,6 +735,87 @@ class serviceController extends Controller
             return "Invalid Token !";
         }
         
+    }
+
+    function hashTag(Request $request){
+        $requestedToken =  $request->header('Access-Token') ;
+
+        $userName = $request->header('User-Name') ;
+
+        $authTokenStatus = $this->authAccessToken($requestedToken,$userName);
+
+        $operationType = $request->method();
+
+
+        
+        $hashTag = $request->input('hashTag');
+        $color = $request->input('color');
+        
+        if($color == "Red"){
+            $color = "danger";
+        }else if($color == "Green"){
+            $color = "success";
+        }else if($color == "Blue"){
+            $color = "primary";
+        }
+        else if($color == "Yellow"){
+            $color = "warning";
+        }
+        else if($color == "Gray"){
+            $color = "secondary";
+        }
+        else if($color == "Black"){
+            $color = "dark";
+        }
+        else{
+            $color = "info";
+        }
+
+       
+        if($authTokenStatus == "Halal"){
+
+            if($operationType == "POST"){
+               $addHashTag = member_hashTag::insert(['userName'=>$userName,'hashTag'=>$hashTag,'color'=>$color]);
+                if($addHashTag == true){
+                    return "success";
+                }
+                else{
+                    return "not added!";
+                }
+            }
+            else if($operationType == "PUT"){
+
+                $id = $request->input('id');
+                
+                $updateHashTag = member_hashTag::where(['userName'=>$userName,'id'=>$id])->update(['hashTag'=>$hashTag,'color'=>$color]);
+                if($updateHashTag == true){
+                    return "success";
+                }
+                else{
+                    return "not updated!";
+                }
+                
+            }
+            else if($operationType == "DELETE"){
+
+                $id = $request->input('id');
+
+                $removeHashTag = member_hashTag::where(['userName'=>$userName,'id'=>$id])->delete();
+                if($removeHashTag == true){
+                    return "success";
+                }
+                else{
+                    return "not removed!";
+                }
+            }
+            else{
+                return ' *******Super Global Variable ERROR!******* ';
+            }
+
+        }
+        else{
+            return "Invalid Token !";
+        }
     }
 
 

@@ -43,6 +43,9 @@ $router->post('/update-links',['middleware'=>'auth','uses'=>'serviceController@u
 $router->delete('/update-links',['middleware'=>'auth','uses'=>'serviceController@updateURL']);
 $router->put('/update-links',['middleware'=>'auth','uses'=>'serviceController@updateURL']);
 
+$router->post('/update-hashtag',['middleware'=>'auth','uses'=>'serviceController@hashTag']);
+$router->delete('/update-hashtag',['middleware'=>'auth','uses'=>'serviceController@hashTag']);
+$router->put('/update-hashtag',['middleware'=>'auth','uses'=>'serviceController@hashTag']);
 
 $router->post('/update-reference',['middleware'=>'auth','uses'=>'serviceController@updateReference']);
 $router->delete('/update-reference',['middleware'=>'auth','uses'=>'serviceController@updateReference']);
