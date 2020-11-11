@@ -552,6 +552,9 @@ class serviceController extends Controller
         $title = $request->input('title');
         $url = $request->input('url');
 
+
+        $id = $request->input('id');
+
         if($authTokenStatus == "Halal"){
 
             if($operationType == "POST"){
@@ -568,7 +571,7 @@ class serviceController extends Controller
                 $updateKey = $request->input('changeKey');
                 $updateVal = $request->input('changeVal');
 
-                $updatehobby = member_url::where(['userName'=>$userName,'buttonTitle'=>$title,'url'=>$url])->update([$updateKey => $updateVal]);
+                $updatehobby = member_url::where(['userName'=>$userName,'buttonTitle'=>$title,'id'=>$id])->update(['buttonTitle' =>  $updateKey ,'url' => $updateVal]);
                 if($updatehobby == true){
                     return "success";
                 }
@@ -578,7 +581,7 @@ class serviceController extends Controller
                 
             }
             else if($operationType == "DELETE"){
-                $removeHobby = member_url::where(['userName'=>$userName,'buttonTitle'=>$title,'url'=>$url])->delete();
+                $removeHobby = member_url::where(['userName'=>$userName,'buttonTitle'=>$title,'id'=>$id])->delete();
                 if($removeHobby == true){
                     return "success";
                 }
