@@ -560,10 +560,10 @@ class serviceController extends Controller
             if($operationType == "POST"){
                $addHobby = member_url::insert(['userName'=>$userName,'buttonTitle'=>$title,'url'=>$url]);
                 if($addHobby == true){
-                    return "success";
+                    return "200";
                 }
                 else{
-                    return "not added!";
+                    return "304";
                 }
             }
             else if($operationType == "PUT"){
@@ -573,31 +573,32 @@ class serviceController extends Controller
 
                 $updatehobby = member_url::where(['userName'=>$userName,'buttonTitle'=>$title,'id'=>$id])->update(['buttonTitle' =>  $updateKey ,'url' => $updateVal]);
                 if($updatehobby == true){
-                    return "success";
+                    return "200";
                 }
                 else{
-                    return "not removed!";
+                    return "304";
                 }
                 
             }
             else if($operationType == "DELETE"){
                 $removeHobby = member_url::where(['userName'=>$userName,'buttonTitle'=>$title,'id'=>$id])->delete();
                 if($removeHobby == true){
-                    return "success";
+                    return "200";
                 }
                 else{
-                    return "not removed!";
+                    return "304";
                 }
             }
             else{
-                return ' *******Super Global Variable ERROR!******* ';
+                return '405';
             }
 
         }
         else{
-            return "Invalid Token !";
+            return "401";
         }
     }
+
 
 
 
