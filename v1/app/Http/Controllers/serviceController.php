@@ -494,46 +494,48 @@ class serviceController extends Controller
 
         $hobby = $request->input('hobby');
 
+        $id = $request->input('id');
+
         if($authTokenStatus == "Halal"){
 
             if($operationType == "POST"){
                $addHobby = member_hobby::insert(['userName'=>$userName,'hobby'=>$hobby]);
                 if($addHobby == true){
-                    return "success";
+                    return "200";
                 }
                 else{
-                    return "not added!";
+                    return "304";
                 }
             }
             else if($operationType == "PUT"){
                 
                 $updateVal = $request->input('changeVal');
 
-                $updatehobby = member_hobby::where(['userName'=>$userName,'hobby' => $hobby])->update(['hobby' => $updateVal]);
+                $updatehobby = member_hobby::where(['userName'=>$userName,'id' => $id,'hobby' => $hobby])->update(['hobby' => $updateVal]);
                 if($updatehobby == true){
-                    return "success";
+                    return "200";
                 }
                 else{
-                    return "not removed!";
+                    return "304";
                 }
                 
             }
             else if($operationType == "DELETE"){
-                $removeHobby = member_hobby::where(['userName'=>$userName,'hobby' => $hobby])->delete();
+                $removeHobby = member_hobby::where(['userName'=>$userName,'id' => $id,'hobby' => $hobby])->delete();
                 if($removeHobby == true){
-                    return "success";
+                    return "200";
                 }
                 else{
-                    return "not removed!";
+                    return "304";
                 }
             }
             else{
-                return ' *******Super Global Variable ERROR!******* ';
+                return '405';
             }
 
         }
         else{
-            return "Invalid Token !";
+            return "401";
         }
     }
 
