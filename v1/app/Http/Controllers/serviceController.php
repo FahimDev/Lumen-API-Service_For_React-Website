@@ -432,6 +432,7 @@ class serviceController extends Controller
         $authTokenStatus = $this->authAccessToken($requestedToken,$userName);
 
         $operationType = $request->method();
+        $id = $request->input('id');
         $type = $request->input('type');
         $orgName = $request->input('orgName');
         $rank = $request->input('rank');
@@ -443,10 +444,10 @@ class serviceController extends Controller
             if($operationType == "POST"){
                $addWork = member_work::insert(['userName'=>$userName,'type'=>$type,'orgName'=>$orgName,'rank'=>$rank,'started'=>$start,'end'=>$end]);
                 if($addWork == true){
-                    return "success";
+                    return "200"; //Success
                 }
                 else{
-                    return "not added!";
+                    return "304"; //Not Modified
                 }
             }
             else if($operationType == "PUT"){
@@ -454,31 +455,31 @@ class serviceController extends Controller
                 $updateKey = $request->input('changeKey');
                 $updateVal = $request->input('changeVal');
 
-                $updateWork = member_work::where(['userName'=>$userName,'type'=>$type,'orgName'=>$orgName,'rank'=>$rank,'started'=>$start,'end'=>$end])->update([$updateKey => $updateVal]);
+                $updateWork = member_work::where(['userName'=>$userName,'type'=>$type,'orgName'=>$orgName,'id'=>$id])->update([$updateKey => $updateVal]);
                 if($updateWork == true){
-                    return "success";
+                    return "200";  //Success
                 }
                 else{
-                    return "not removed!";
+                    return "304"; //Not Modified
                 }
                 
             }
             else if($operationType == "DELETE"){
-                $removeWork = member_work::where(['userName'=>$userName,'type'=>$type,'orgName'=>$orgName,'rank'=>$rank,'started'=>$start,'end'=>$end])->delete();
+                $removeWork = member_work::where(['userName'=>$userName,'type'=>$type,'orgName'=>$orgName,'id'=>$id])->delete();
                 if($removeWork == true){
-                    return "success";
+                    return "200";  //Success
                 }
                 else{
-                    return "not removed!";
+                    return "304"; //Not Modified
                 }
             }
             else{
-                return ' *******Super Global Variable ERROR!******* ';
+                return '405'; //method not allowed
             }
 
         }
         else{
-            return "Invalid Token !";
+            return "401";//Unauthorized header
         }
     }
 
