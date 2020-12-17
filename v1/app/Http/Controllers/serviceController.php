@@ -768,7 +768,7 @@ class serviceController extends Controller
         else if($color == "Yellow"){
             $color = "warning";
         }
-        else if($color == "Gray"){
+        else if($color == "Grey"){
             $color = "secondary";
         }
         else if($color == "Black"){
@@ -784,10 +784,10 @@ class serviceController extends Controller
             if($operationType == "POST"){
                $addHashTag = member_hashTag::insert(['userName'=>$userName,'hashTag'=>$hashTag,'color'=>$color]);
                 if($addHashTag == true){
-                    return "success";
+                    return "200";
                 }
                 else{
-                    return "not added!";
+                    return "304";
                 }
             }
             else if($operationType == "PUT"){
@@ -796,10 +796,10 @@ class serviceController extends Controller
                 
                 $updateHashTag = member_hashTag::where(['userName'=>$userName,'id'=>$id])->update(['hashTag'=>$hashTag,'color'=>$color]);
                 if($updateHashTag == true){
-                    return "success";
+                    return "200";
                 }
                 else{
-                    return "not updated!";
+                    return "304";
                 }
                 
             }
@@ -809,19 +809,19 @@ class serviceController extends Controller
 
                 $removeHashTag = member_hashTag::where(['userName'=>$userName,'id'=>$id])->delete();
                 if($removeHashTag == true){
-                    return "success";
+                    return "200";
                 }
                 else{
-                    return "not removed!";
+                    return "304";
                 }
             }
             else{
-                return ' *******Super Global Variable ERROR!******* ';
+                return '405';
             }
 
         }
         else{
-            return "Invalid Token !";
+            return "401";
         }
     }
 
