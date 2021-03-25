@@ -63,6 +63,8 @@ $router->get('/about',['middleware'=>'auth','uses'=>'webManager@selectAbout']);
 $router->get('/title',['middleware'=>'auth','uses'=>'webManager@selectWebTitles']); //http://localhost:8000/title
 $router->post('/title',['middleware'=>'auth','uses'=>'webManager@selectWebTitle']); //http://localhost:8000/title?id=1
 
+$router->get('/member-app-edu/{type}/{memberID}',['middleware'=>'auth','uses'=>'serviceController@appShowEdu']);
+
 $router->get('/members',['middleware'=>'auth','uses'=>'webManager@selectMembers']);
 $router->get('/member-profile/{memberID}',['middleware'=>'auth','uses'=>'webManager@selectMemberInfo']); //http://localhost:8000/profile/fahim0373
 $router->get('/member-academic/{memberID}',['middleware'=>'auth','uses'=>'webManager@selectMemberEducation']);

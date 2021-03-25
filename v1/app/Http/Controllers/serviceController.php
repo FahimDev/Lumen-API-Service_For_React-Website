@@ -42,7 +42,9 @@ class serviceController extends Controller
 
         $userLogin  = admin::where('user_name',$userName)->first('password');
         $userPassword = $userLogin->password ;
-
+        if($userLogin != true){
+            return "wrongUser";
+        }
         if (Hash::check($password, $userPassword)) {
             $privateKey = Str::random(40);
             
@@ -221,14 +223,14 @@ class serviceController extends Controller
             $updateStatus=member_info::where('userName',$userName)->update([$changeKey =>$changeVal]);
 
             if($updateStatus==true){
-                return response()->json(['updated_info'=>$changeVal]) ;
+                return "200";
             }
             else{
-                return "Update fail";
+                return "304"; //Not Modified
             }
         }
         else{
-            return "Invalid Token !";
+            return "401";//Unauthorized header
         }
     }
 
@@ -743,6 +745,46 @@ class serviceController extends Controller
         }
         
     }
+
+    function appShowEdu($type,$memberID){
+
+        $member_id = $memberID;
+        
+        if($type == "scl"){
+            
+            $result  = member_edu::where('userName',$member_id)->whereNotNull('school')->select('id','school','sBatch')->get();
+       return $result;
+            
+        }else if($type == "clg"){
+            
+             $result  = member_edu::where('userName',$member_id)->whereNotNull('college')->select('id','college','cBatch')->get();
+       return $result;
+            
+        }else if($type == "dip"){
+            
+             $result  = member_edu::where('userName',$member_id)->whereNotNull('diploma')->select('id','diploma','dSub','dBatch')->get();
+       return $result;
+            
+        }else if($type == "bs"){
+            
+             $result  = member_edu::where('userName',$member_id)->whereNotNull('bachelor')->select('id','bachelor','baSub','baBatch')->get();
+       return $result;
+            
+        }else if($type == "ms"){
+            
+             $result  = member_edu::where('userName',$member_id)->whereNotNull('masters')->select('id','masters','maSub','msBatch')->get();
+       return $result;
+            
+        }else{
+            
+            $result  = member_edu::where('userName',$member_id)->whereNotNull('phd')->select('id','phd','phdSub','passYear')->get();
+       return $result;
+            
+        }
+        
+       
+       
+   }
 
     function hashTag(Request $request){
         $requestedToken =  $request->header('Access-Token') ;
