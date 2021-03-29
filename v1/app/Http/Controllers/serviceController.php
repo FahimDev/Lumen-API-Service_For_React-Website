@@ -14,11 +14,11 @@ use App\member_work;//model
 
 use App\member_hobby;//model
 
+use App\member_hashTag;//model
+
 use App\member_url;//model
 
 use App\member_network;//model
-
-use App\member_hashTag;//model
 
 use \Firebase\JWT\JWT; //Custom add for enciding Token
 
@@ -41,10 +41,13 @@ class serviceController extends Controller
         
 
         $userLogin  = admin::where('user_name',$userName)->first('password');
-        $userPassword = $userLogin->password ;
+        
         if($userLogin != true){
             return "wrongUser";
         }
+        
+        $userPassword = $userLogin->password ;
+
         if (Hash::check($password, $userPassword)) {
             $privateKey = Str::random(40);
             
@@ -249,17 +252,18 @@ class serviceController extends Controller
 
                     $name =$userName.time().'.'.$imgFile->getClientOriginalExtension();
                     $destinationPath = $imgFile->move('membersImg',$name);
-                                                    /**
-                                                     * when you deploy this project to actual server
-                                                     * replace the $destinationPath value with "public/membersImg"
-                                                     * and remove the 'public/' portion from the value of
-                                                     * $updateProImg 
-                                                     */
+                    /**
+                     * when you deploy this project to actual server
+                     * replace the $destinationPath value with "public/membersImg"
+                     * and remove the 'public/' portion from the value of
+                     * $updateProImg 
+                     */
+
 
                     $baseURL = env ('APP_URL');
 
                     $updateProImg = member_info::where('userName',$userName)->update(['imgPath' =>$baseURL.'public/'.$destinationPath]);
-
+                    
                     if($updateProImg == true){
                         return "success";
                     }
@@ -496,7 +500,7 @@ class serviceController extends Controller
         $operationType = $request->method();
 
         $hobby = $request->input('hobby');
-
+        
         $id = $request->input('id');
 
         if($authTokenStatus == "Halal"){
@@ -556,8 +560,7 @@ class serviceController extends Controller
 
         $title = $request->input('title');
         $url = $request->input('url');
-
-
+        
         $id = $request->input('id');
 
         if($authTokenStatus == "Halal"){
@@ -603,7 +606,6 @@ class serviceController extends Controller
             return "401";
         }
     }
-
 
 
 
@@ -721,7 +723,8 @@ class serviceController extends Controller
             return "Invalid Token !";
         }
     }
-
+    
+    
     function appShowRef(Request $request){
 
         $requestedToken =  $request->header('Access-Token') ;
@@ -745,48 +748,143 @@ class serviceController extends Controller
         }
         
     }
-
+    
+    
     function appShowEdu($type,$memberID){
 
-        $member_id = $memberID;
+         $member_id = $memberID;
+         
+         if($type == "scl"){
+             
+             $result  = member_edu::where('userName',$member_id)->whereNotNull('school')->select('id','school','sBatch')->get();
+        return $result;
+             
+         }else if($type == "clg"){
+             
+              $result  = member_edu::where('userName',$member_id)->whereNotNull('college')->select('id','college','cBatch')->get();
+        return $result;
+             
+         }else if($type == "dip"){
+             
+              $result  = member_edu::where('userName',$member_id)->whereNotNull('diploma')->select('id','diploma','dSub','dBatch')->get();
+        return $result;
+             
+         }else if($type == "bs"){
+             
+              $result  = member_edu::where('userName',$member_id)->whereNotNull('bachelor')->select('id','bachelor','baSub','baBatch')->get();
+        return $result;
+             
+         }else if($type == "ms"){
+             
+              $result  = member_edu::where('userName',$member_id)->whereNotNull('masters')->select('id','masters','maSub','msBatch')->get();
+        return $result;
+             
+         }else{
+             
+             $result  = member_edu::where('userName',$member_id)->whereNotNull('phd')->select('id','phd','phdSub','passYear')->get();
+        return $result;
+             
+         }
+         
         
-        if($type == "scl"){
-            
-            $result  = member_edu::where('userName',$member_id)->whereNotNull('school')->select('id','school','sBatch')->get();
-       return $result;
-            
-        }else if($type == "clg"){
-            
-             $result  = member_edu::where('userName',$member_id)->whereNotNull('college')->select('id','college','cBatch')->get();
-       return $result;
-            
-        }else if($type == "dip"){
-            
-             $result  = member_edu::where('userName',$member_id)->whereNotNull('diploma')->select('id','diploma','dSub','dBatch')->get();
-       return $result;
-            
-        }else if($type == "bs"){
-            
-             $result  = member_edu::where('userName',$member_id)->whereNotNull('bachelor')->select('id','bachelor','baSub','baBatch')->get();
-       return $result;
-            
-        }else if($type == "ms"){
-            
-             $result  = member_edu::where('userName',$member_id)->whereNotNull('masters')->select('id','masters','maSub','msBatch')->get();
-       return $result;
-            
-        }else{
-            
-            $result  = member_edu::where('userName',$member_id)->whereNotNull('phd')->select('id','phd','phdSub','passYear')->get();
-       return $result;
-            
-        }
         
-       
-       
-   }
+    }
+    
+    function memberEdu(Request $request){
+        
+        $requestedToken =  $request->header('Access-Token') ;
 
-    function hashTag(Request $request){
+        $userName = $request->header('User-Name') ;
+
+        $authTokenStatus = $this->authAccessToken($requestedToken,$userName);
+
+        $operationType = $request->method();
+
+        $type = $request->input('type');
+
+        $title = $request->input('institute');
+        $name = $request->input('degree');
+        $batch = $request->input('batch');
+
+        if($authTokenStatus == "Halal"){
+            if($operationType == "POST"){
+                if($type == "scl"){
+                    $addEdu = member_edu::insert(['userName'=>$userName,'school'=>$title,'sbatch'=>$batch]);
+                }else if($type == "clg"){
+                    $addEdu = member_edu::insert(['userName'=>$userName,'college'=>$title,'cBatch'=>$batch,]);
+                }else if($type == "dip"){
+                    $addEdu = member_edu::insert(['userName'=>$userName,'diploma'=>$title,'dSub'=>$name,'dBatch'=>$batch]);
+                }else if($type == "bs"){
+                    $addEdu = member_edu::insert(['userName'=>$userName,'bachelor'=>$title,'baSub'=>$name,'baBatch'=>$batch]);
+                }else if($type == "ms"){
+                    $addEdu = member_edu::insert(['userName'=>$userName,'masters'=>$title,'maSub'=>$name,'msBatch'=>$batch]);
+                }else{
+                    $addEdu = member_edu::insert(['userName'=>$userName,'phd'=>$title,'phdSub'=>$name,'passYear'=>$batch]);
+                }
+                
+                
+                 if($addEdu == true){
+                     return "200";
+                 }
+                 else{
+                     return "304";
+                 }
+             }else if($operationType == "PUT"){
+                $updateKey = $request->input('id');
+                    
+                
+                   if($type == "scl"){
+                       
+                       $updateEdu = member_edu::where(['userName'=>$userName,'id'=>$updateKey])->update(['school'=>$title,'sbatch'=>$batch]);
+                       
+                   }else if($type == "clg"){
+                       
+                        $updateEdu = member_edu::where(['userName'=>$userName,'id'=>$updateKey])->update(['college'=>$title,'cBatch'=>$batch]);
+                        
+                   }else if($type == "dip"){
+                      
+                       $updateEdu = member_edu::where(['userName'=>$userName,'id'=>$updateKey])->update(['diploma'=>$title,'dSub'=>$name,'dBatch'=>$batch]);
+                       
+                   }else if($type == "bs"){
+                       
+                       $updateEdu = member_edu::where(['userName'=>$userName,'id'=>$updateKey])->update(['bachelor'=>$title,'baSub'=>$name,'baBatch'=>$batch]);
+                       
+                   }else if($type == "ms"){
+                       
+                       $updateEdu = member_edu::where(['userName'=>$userName,'id'=>$updateKey])->update(['masters'=>$title,'maSub'=>$name,'msBatch'=>$batch]);
+                   }else{
+                       $updateEdu = member_edu::where(['userName'=>$userName,'id'=>$updateKey])->update(['phd'=>$title,'phdSub'=>$name,'passYear'=>$batch]);
+                   }
+    
+                    
+                    if($updateEdu == true){
+                        return "200";
+                    }
+                    else{
+                        return "304";
+                    }
+                }else if($operationType == "DELETE"){
+                    $delKey = $request->input('id');
+                   $removeEdu = member_edu::where(['userName'=>$userName,'id'=>$delKey])->delete();
+                   if($removeEdu == true){
+                       return "200";
+                   }
+                   else{
+                       return "304";
+                   }
+                    
+
+             }else{
+                return '405';
+             }
+                
+        }else{
+            return '401';
+        }  
+    }
+
+    
+function hashTag(Request $request){
         $requestedToken =  $request->header('Access-Token') ;
 
         $userName = $request->header('User-Name') ;

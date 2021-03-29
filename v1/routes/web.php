@@ -24,9 +24,9 @@ $router->put('/update-password',['middleware'=>'auth','uses'=>'serviceController
 $router->put('/update-profile',['middleware'=>'auth','uses'=>'serviceController@updateProfile']);
 $router->post('/update-profile-img',['middleware'=>'auth','uses'=>'serviceController@uploadImg']);
 
-$router->post('/update-profile-edu',['middleware'=>'auth','uses'=>'serviceController@updateMemberEdu']);
-$router->put('/update-profile-edu',['middleware'=>'auth','uses'=>'serviceController@updateMemberEdu']);
-$router->delete('/update-profile-edu',['middleware'=>'auth','uses'=>'serviceController@updateMemberEdu']);
+$router->post('/update-profile-edu',['middleware'=>'auth','uses'=>'serviceController@memberEdu']);
+$router->put('/update-profile-edu',['middleware'=>'auth','uses'=>'serviceController@memberEdu']);
+$router->delete('/update-profile-edu',['middleware'=>'auth','uses'=>'serviceController@memberEdu']);
 
 
 $router->post('/update-employment',['middleware'=>'auth','uses'=>'serviceController@updateWork']);
